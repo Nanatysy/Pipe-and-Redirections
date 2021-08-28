@@ -5,6 +5,11 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
+#define FD_ERROR 1
+#define SYSCALL_ERROR 2
+#define EXECVE_ERROR 3
+#define ARG_ERROR 4
+
 typedef struct	s_all
 {
 	char	***arg;
@@ -19,5 +24,6 @@ void	*ft_calloc(size_t count, size_t size);
 char	**ft_split(char *s, char c);
 char	*ft_strdup(char *str);
 int		ft_strlen(char *str);
+int	error(int flag, char *arg);
 
 #endif //PIPEX_PIPEX_H

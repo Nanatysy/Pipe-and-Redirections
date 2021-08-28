@@ -47,23 +47,15 @@ int	main(int argc, char **argv, char **env)
 	int		status;
 
 	if (argc != 5)
-		return (1);
+		return (error(ARG_ERROR, NULL));
 	all.input_fd = open(argv[1], O_RDONLY);
 	if (all.input_fd == -1)
-	{
-		write(2, "permission denied: ", ft_strlen("permission denied: "));
-		write(2, argv[1], ft_strlen(argv[1]));
-		write(2, "\n", 1);
-		exit(3);
-	}
+		return (error(FD_ERROR, argv[1]));
 	all.output_fd = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC | O_APPEND, 0666);
 	if (all.output_fd == -1)
-	{
-		write(2, "permission denied: ", ft_strlen("permission denied: "));
-		write(2, argv[4], ft_strlen(argv[4]));
-		write(2, "\n", 1);
-		exit(4);
-	}
+		return (error(FD_ERROR, argv[4]));
+
+	// malloc part
 	all.arg = malloc(sizeof(char **) * 2);
 	if (!all.arg)
 		return (2);
@@ -82,6 +74,8 @@ int	main(int argc, char **argv, char **env)
 	waitpid(all.pid[1], &status, 0);
 	dup2(all.tmp_fd, 0);
 	close(all.tmp_fd);
+
+	// free part
 
 	free(all.arg[0][0]);
 	free(all.arg[0]);
