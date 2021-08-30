@@ -11,4 +11,5 @@ add_executable(pipex
         ft_strdup.c
         ft_strlen.c
         main.c
+        error.c
         pipex.h)

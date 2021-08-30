@@ -20,10 +20,12 @@ typedef struct	s_all
 	pid_t	pid[2];
 }				t_all;
 
+void	free_all_and_close(t_all *all);
+void	init_all(t_all *all, char **argv);
 void	*ft_calloc(size_t count, size_t size);
 char	**ft_split(char *s, char c);
 char	*ft_strdup(char *str);
 int		ft_strlen(char *str);
-int	error(int flag, char *arg);
+int		error(int flag, char *arg, t_all *all);
 
 #endif //PIPEX_PIPEX_H
