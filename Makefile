@@ -4,6 +4,7 @@ SRC =	ft_calloc.c \
 		ft_split.c \
 		ft_strdup.c \
 		ft_strlen.c \
+		error.c \
 		main.c
 
 OBJ = $(SRC:.c=.o)
