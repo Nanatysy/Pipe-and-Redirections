@@ -14,7 +14,6 @@ typedef struct	s_all
 {
 	char	***arg;
 	int		my_pipe[2];
-	int		tmp_fd;
 	int		input_fd;
 	int		output_fd;
 	pid_t	pid[2];

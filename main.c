@@ -20,7 +20,6 @@ void	free_all_and_close(t_all *all)
 	}
 	close(all->input_fd);
 	close(all->output_fd);
-	close(all->tmp_fd);
 	close(all->my_pipe[0]);
 	close(all->my_pipe[1]);
 }
@@ -73,13 +72,17 @@ int	main(int argc, char **argv, char **env)
 	if (argc != 5)
 		return (error(ARG_ERROR, NULL, NULL));
 	all.input_fd = open(argv[1], O_RDONLY);
-	if (all.input_fd == -1)
-		return (error(FD_ERROR, argv[1], &all));
 	all.output_fd = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC | O_APPEND, 0666);
-	if (all.output_fd == -1)
-		return (error(FD_ERROR, argv[4], &all));
+	if (all.input_fd == -1 || all.output_fd == -1)
+	{
+		if (all.input_fd == -1)
+			error(FD_ERROR, argv[1], &all);
+		if (all.output_fd == -1)
+			error(FD_ERROR, argv[4], &all);
+		free_all_and_close(&all);
+		return (1);
+	}
 	init_all(&all, argv);
-//	all.tmp_fd = dup(0);
 	pipe(all.my_pipe);
 	dup2(all.input_fd, 0);
 	close (all.input_fd);
@@ -89,8 +92,6 @@ int	main(int argc, char **argv, char **env)
 	my_fork(&all, 1, env);
 	waitpid(all.pid[0], NULL, 0);
 	waitpid(all.pid[1], NULL, 0);
-//	dup2(all.tmp_fd, 0);
-//	close(all.tmp_fd);
 	free_all_and_close(&all);
 	return (0);
 }

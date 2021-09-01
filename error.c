@@ -19,6 +19,7 @@ int	error(int flag, char *arg, t_all *all)
 	}
 	else if (flag == ARG_ERROR)
 		write(2, "wrong number of arguments\n", ft_strlen("wrong number of arguments\n"));
-	free_all_and_close(all);
+	if (flag != FD_ERROR)
+		free_all_and_close(all);
 	return (1);
 }
