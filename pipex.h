@@ -24,7 +24,10 @@ void	init_all(t_all *all, char **argv);
 void	*ft_calloc(size_t count, size_t size);
 char	**ft_split(char *s, char c);
 char	*ft_strdup(char *str);
+char	*find_path(char *arg, char **env);
 int		ft_strlen(char *str);
 int		error(int flag, char *arg, t_all *all);
+int		chech_arg(const char *arg);
+int		ft_strcmp(const char *src, const char *ref);
 
 #endif //PIPEX_PIPEX_H
