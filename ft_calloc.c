@@ -2,9 +2,9 @@
 
 void	*ft_calloc(size_t count, size_t size)
 {
-	void	*res;
+	void			*res;
 	unsigned char	*tmp;
-	size_t	i;
+	size_t			i;
 
 	res = (void *)malloc(count * size);
 	if (!res)

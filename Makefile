@@ -6,6 +6,7 @@ SRC =	ft_calloc.c \
 		ft_strlen.c \
 		error.c \
 		path.c \
+		ft_strjoin.c \
 		main.c
 
 OBJ = $(SRC:.c=.o)

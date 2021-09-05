@@ -37,7 +37,8 @@ void	init_all(t_all *all, char **argv)
 
 int	my_fork(t_all *all, int flag, char **env)
 {
-	int	i;
+	int		i;
+	char	*tmp;
 
 	all->pid[flag] = fork();
 	if (all->pid[flag] == 0)
@@ -45,7 +46,9 @@ int	my_fork(t_all *all, int flag, char **env)
 		dup2(all->my_pipe[1], 1);
 		close(all->my_pipe[0]);
 		close(all->my_pipe[1]);
-		i = execve(all->arg[flag][0], &all->arg[flag][1], env);
+		tmp = find_path(all->arg[flag][0], env);
+		i = execve(tmp, &all->arg[flag][1], env);
+		free(tmp);
 		if (i == -1)
 			error(EXECVE_ERROR, all->arg[flag][1], all);
 		exit(0);
@@ -55,15 +58,20 @@ int	my_fork(t_all *all, int flag, char **env)
 	else
 	{
 		if (flag == 0)
-		{
-			dup2(all->my_pipe[0], 0);
-			close(all->my_pipe[0]);
-			close(all->my_pipe[1]);
-		}
+			my_dup(all);
 	}
 	return (0);
 }
 
+int	fd_error(t_all *all, char **argv)
+{
+	if (all->input_fd == -1)
+		error(FD_ERROR, argv[1], all);
+	if (all->output_fd == -1)
+		error(FD_ERROR, argv[4], all);
+	free_all_and_close(all);
+	return (1);
+}
 
 int	main(int argc, char **argv, char **env)
 {
@@ -71,18 +79,12 @@ int	main(int argc, char **argv, char **env)
 
 	if (argc != 5)
 		return (error(ARG_ERROR, NULL, NULL));
-	all.input_fd = open(argv[1], O_RDONLY);
-	all.output_fd = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC | O_APPEND, 0666);
-	if (all.input_fd == -1 || all.output_fd == -1)
-	{
-		if (all.input_fd == -1)
-			error(FD_ERROR, argv[1], &all);
-		if (all.output_fd == -1)
-			error(FD_ERROR, argv[4], &all);
-		free_all_and_close(&all);
-		return (1);
-	}
 	init_all(&all, argv);
+	all.input_fd = open(argv[1], O_RDONLY);
+	all.output_fd = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC | O_APPEND,
+			 0666);
+	if (all.input_fd == -1 || all.output_fd == -1)
+		return (fd_error(&all, argv));
 	pipe(all.my_pipe);
 	dup2(all.input_fd, 0);
 	close (all.input_fd);

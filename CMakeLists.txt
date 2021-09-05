@@ -13,4 +13,5 @@ add_executable(pipex
         main.c
         error.c
         path.c
+        ft_strjoin.c
         pipex.h)
